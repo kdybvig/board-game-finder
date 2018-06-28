@@ -4,7 +4,7 @@ This is react application which helps users decide which board game to purchase.
 Users answer a questionnaire and based off user preferences and data from
 [boardgamegeek.com] (http://boardgamegeek.com), this application ranks the five best matches.
 
-<img src='screenshot1.png' width='474px' height='564px'/>
+<img src='screenshot1.png' width='854px' height='656px'/>
 
 ## Built With
 
