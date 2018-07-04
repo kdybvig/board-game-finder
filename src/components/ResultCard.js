@@ -6,20 +6,35 @@ import { withStyles } from '@material-ui/core/styles';
 import he from 'he'
 
 const styles = theme => ({
-  firstCard : {
-    width: '85%',
-    margin: '50px auto',
-    whiteSpace: 'pre-wrap'
-  },
-  card : {
+  firstCard: {
+    margin: '20px auto',
     [theme.breakpoints.down('sm')]: {
-      width: '75%',
+      width: '85%'
     },
     [theme.breakpoints.up('md')]: {
-      width: '65%',
+      width: '75%'
     },
+    [theme.breakpoints.up('lg')]: {
+      width:'50%',
+      margin: '20px 25%'
+    }
+  },
+  card : {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     margin: '50px auto',
-    whiteSpace: 'pre-wrap'
+    whiteSpace: 'pre-wrap',
+
+    [theme.breakpoints.down('sm')]: {
+      width: '60%'
+    },
+    [theme.breakpoints.up('md')]: {
+      width: '40%'
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '20%'
+    }
   },
   attribute : {
     fontWeight: 'bold'
@@ -28,6 +43,12 @@ const styles = theme => ({
     fontWeight: 'bold'
   },
   description : {
+  },
+  bggLink : {
+    textAlign: 'right',
+    margin: 'auto 20px 0px 20px',
+    position: 'relative',
+    bottom: 10
   }
 });
 
@@ -35,6 +56,7 @@ class ResultCard extends Component {
   state = {
     imgPadding: 40,
     textlength: 2000,
+    textMultiplier: .4,
     expanded: false
   }
 
@@ -63,8 +85,12 @@ class ResultCard extends Component {
 
   updateTextLength = () => {
     //number of characters shown in description changes with window resize
-    const textLength = Math.ceil(Math.pow((window.innerWidth/200),2))*80;
-    this.setState({textLength: textLength});
+    const width = window.innerWidth
+    const textLength = Math.ceil(Math.pow((width/200),2))*80;
+    let multiplier = .4
+    if (width >= 1280) { multiplier = .06 }
+    else if (width >= 960) {multiplier = .2}
+    this.setState({textLength: textLength, multiplier: multiplier});
     }
 
   toggleExpanded = () => {
@@ -78,7 +104,8 @@ class ResultCard extends Component {
     //descriptions are longer for the top match than other matches
     const stopIndex = this.props.rank === 1 ?
       this.state.textLength :
-      Math.round(this.state.textLength*.7);
+      Math.round(this.state.textLength*this.state.multiplier);
+    console.log(stopIndex)
     //description always ends at the end of a sentence
     const endDescription = stopIndex + fullDescription.slice(stopIndex).search(/\.\s/) + 1
     const description = (endDescription === stopIndex) || this.state.expanded ?
@@ -165,10 +192,10 @@ class ResultCard extends Component {
                 {this.state.expanded ? 'collapse text' : '...'}
               </p>
             }
-            <p style={{textAlign: 'right'}}>
-              <a href={link}>Read More on BoardGameGeek.com</a>
-            </p>
           </CardContent>
+          <p className = {classes.bggLink}>
+            <a href={link}>Read More on BoardGameGeek.com</a>
+          </p>
         </Card>
     )
   }
